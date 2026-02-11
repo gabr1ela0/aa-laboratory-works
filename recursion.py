@@ -6,10 +6,8 @@ def fibonacci(n):
         return n
     return fibonacci(n - 1) + fibonacci(n - 2)
 
-# Input values
 n_values = [5, 7, 10, 12, 15, 17, 20, 22, 25, 27, 30, 32, 35, 37, 40, 42, 45]
 
-# Table
 execution_times = []
 
 print(f"{'n':>5} | {'Time (s)':>10}")

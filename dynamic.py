@@ -13,15 +13,15 @@ def fibonacci(n):
     return A[n]
 
 
-n_values_dp = [501, 631, 794, 1000, 1259, 1585, 1995, 2512, 3162,
-               3981, 5012, 6310, 7943, 10000, 12589, 15849]
+n_values = [501, 631, 794, 1000, 1259, 1585, 1995, 2512, 3162,
+            3981, 5012, 6310, 7943, 10000, 12589, 15849]
 
 execution_times_dp = []
 
 print(f"{'n':>7} | {'Time (s)':>12}")
 print("-" * 22)
 
-for n in n_values_dp:
+for n in n_values:
     start = time.perf_counter()
     fibonacci(n)
     end = time.perf_counter()
@@ -30,7 +30,7 @@ for n in n_values_dp:
     print(f"{n:>7} | {exec_time:>12.6f}")
 
 plt.figure(figsize=(12,6))
-plt.plot(n_values_dp, execution_times_dp, marker='o', color='green')
+plt.plot(n_values, execution_times_dp, marker='o', color='green')
 plt.title("Dynamic Programming Fibonacci Function")
 plt.xlabel("n-th Fibonacci Term")
 plt.ylabel("Time (seconds)")
