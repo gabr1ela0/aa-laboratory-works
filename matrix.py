@@ -40,10 +40,9 @@ for n in n_values:
     print(f"{n:>7} | {exec_time:>12.6f}")
 
 plt.figure(figsize=(12,6))
-plt.plot(n_values, execution_times_matrix, marker='o', color='red')
+plt.plot(n_values, execution_times_matrix, marker='o')
 plt.title("Matrix Fibonacci Function")
 plt.xlabel("n-th Fibonacci Term")
 plt.ylabel("Time (seconds)")
 plt.grid(True)
-plt.legend()
 plt.show()
