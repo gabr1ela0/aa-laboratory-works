@@ -2,264 +2,136 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX 20000
+#define MAX 100000  // max array size
 
-// merges two sorted parts of the array
+// Merge Sort
 void merge(int arr[], int left, int mid, int right){
-
-    int n1 = mid-left+1;   // size of first part
-    int n2 = right-mid;    // size of second part
-
-    int L[n1], R[n2];      // temporary arrays
-
-    // copy first part
-    for(int i=0;i<n1;i++)
-        L[i]=arr[left+i];
-
-    // copy second part
-    for(int j=0;j<n2;j++)
-        R[j]=arr[mid+1+j];
-
+    int n1 = mid-left+1;
+    int n2 = right-mid;
+    int L[n1], R[n2];
+    for(int i=0;i<n1;i++) L[i]=arr[left+i];
+    for(int i=0;i<n2;i++) R[i]=arr[mid+1+i];
     int i=0,j=0,k=left;
-
-    // compare elements and merge
     while(i<n1 && j<n2){
-
-        if(L[i]<=R[j]){
-            arr[k]=L[i];
-            i++;
-        }
-        else{
-            arr[k]=R[j];
-            j++;
-        }
-        k++;
+        if(L[i]<=R[j]) arr[k++]=L[i++];
+        else arr[k++]=R[j++];
     }
-
-    // copy remaining elements from L
-    while(i<n1){
-        arr[k]=L[i];
-        i++; k++;
-    }
-
-    // copy remaining elements from R
-    while(j<n2){
-        arr[k]=R[j];
-        j++; k++;
-    }
+    while(i<n1) arr[k++]=L[i++];
+    while(j<n2) arr[k++]=R[j++];
 }
-
-// divides array and sorts recursively
 void mergeSort(int arr[], int left, int right){
-
     if(left<right){
-
-        int mid=(left+right)/2;   // middle position
-
-        mergeSort(arr,left,mid);      // sort left part
-        mergeSort(arr,mid+1,right);   // sort right part
-
-        merge(arr,left,mid,right);    // merge parts
+        int mid=(left+right)/2;
+        mergeSort(arr,left,mid);
+        mergeSort(arr,mid+1,right);
+        merge(arr,left,mid,right);
     }
 }
 
-
-// finds the maximum value in array
+// Counting Sort
 int findMax(int arr[], int n){
-
     int max=arr[0];
-
-    for(int i=1;i<n;i++)
-        if(arr[i]>max)
-            max=arr[i];
-
+    for(int i=1;i<n;i++) if(arr[i]>max) max=arr[i];
     return max;
 }
-
-// counting sort algorithm
 void countSort(int arr[], int n){
-
-    int max=findMax(arr,n);  // maximum value
-
-    int count[max+1];
-
-    // set counters to zero
-    for(int i=0;i<=max;i++)
-        count[i]=0;
-
-    // count occurrences
-    for(int i=0;i<n;i++)
-        count[arr[i]]++;
-
-    // cumulative counts
-    for(int i=1;i<=max;i++)
-        count[i]+=count[i-1];
-
-    int output[n];
-
-    // build sorted array
+    int max=findMax(arr,n);
+    int *count = (int*)calloc(max+1,sizeof(int)); // dynamic allocation
+    int *output = (int*)malloc(n*sizeof(int));
+    for(int i=0;i<n;i++) count[arr[i]]++;
+    for(int i=1;i<=max;i++) count[i]+=count[i-1];
     for(int i=n-1;i>=0;i--){
         output[count[arr[i]]-1]=arr[i];
         count[arr[i]]--;
     }
-
-    // copy back to original
-    for(int i=0;i<n;i++)
-        arr[i]=output[i];
+    for(int i=0;i<n;i++) arr[i]=output[i];
+    free(count);
+    free(output);
 }
 
-
-// divides array around pivot
+// Quick Sort
 int partition(int arr[], int start, int end){
-
-    int pivot=arr[end];  // pivot element
-    int index=start;
-
+    int pivot=arr[end], index=start;
     for(int i=start;i<end;i++){
-
         if(arr[i]<=pivot){
-
-            int temp=arr[i];
-            arr[i]=arr[index];
-            arr[index]=temp;
-
+            int temp=arr[i]; arr[i]=arr[index]; arr[index]=temp;
             index++;
         }
     }
-
-    // put pivot in correct position
-    int temp=arr[end];
-    arr[end]=arr[index];
-    arr[index]=temp;
-
+    int temp=arr[end]; arr[end]=arr[index]; arr[index]=temp;
     return index;
 }
-
-// quick sort algorithm
 void quickSort(int arr[], int start, int end){
-
     if(start<end){
-
         int p=partition(arr,start,end);
-
-        quickSort(arr,start,p-1);  // left side
-        quickSort(arr,p+1,end);    // right side
+        quickSort(arr,start,p-1);
+        quickSort(arr,p+1,end);
     }
 }
 
-
-// keeps heap property
+// Heap Sort
 void heapify(int arr[], int n, int i){
-
     int largest=i;
-
     int left=2*i+1;
     int right=2*i+2;
-
-    // check left child
-    if(left<n && arr[left]>arr[largest])
-        largest=left;
-
-    // check right child
-    if(right<n && arr[right]>arr[largest])
-        largest=right;
-
-    // swap if needed
+    if(left<n && arr[left]>arr[largest]) largest=left;
+    if(right<n && arr[right]>arr[largest]) largest=right;
     if(largest!=i){
-
-        int temp=arr[i];
-        arr[i]=arr[largest];
-        arr[largest]=temp;
-
+        int temp=arr[i]; arr[i]=arr[largest]; arr[largest]=temp;
         heapify(arr,n,largest);
     }
 }
-
-// heap sort algorithm
 void heapSort(int arr[], int n){
-
-    // build heap
-    for(int i=n/2-1;i>=0;i--)
-        heapify(arr,n,i);
-
-    // extract elements
+    for(int i=n/2-1;i>=0;i--) heapify(arr,n,i);
     for(int i=n-1;i>0;i--){
-
-        int temp=arr[0];
-        arr[0]=arr[i];
-        arr[i]=temp;
-
+        int temp=arr[0]; arr[0]=arr[i]; arr[i]=temp;
         heapify(arr,i,0);
     }
 }
 
-
-// generates random numbers
+// generate random array with numbers 0..999 for counting sort safety
 void generateArray(int arr[], int n){
-
-    for(int i=0;i<n;i++)
-        arr[i]=rand()%1000;
+    for(int i=0;i<n;i++) arr[i]=rand()%1000;
 }
-
-// copies array
 void copyArray(int a[], int b[], int n){
-
-    for(int i=0;i<n;i++)
-        b[i]=a[i];
+    for(int i=0;i<n;i++) b[i]=a[i];
 }
-
 
 int main(){
+    srand(time(NULL));
 
-    srand(time(NULL));  // random seed
-
-    int sizes[]={100,1000,5000,10000,20000};
-
-    int original[MAX];
-    int test[MAX];
-
+    int sizes[]={100,1000,5000,10000,20000,50000,100000};
+    int original[MAX], test[MAX];
     clock_t start,end;
 
-    for(int s=0;s<5;s++){
-
+    for(int s=0;s<7;s++){
         int n=sizes[s];
-
         generateArray(original,n);
-
         printf("\nSize %d\n",n);
-
 
         copyArray(original,test,n);
         start=clock();
         quickSort(test,0,n-1);
         end=clock();
-        printf("Quick %f\n",
-        (double)(end-start)/CLOCKS_PER_SEC);
-
+        printf("Quick %f\n",(double)(end-start)/CLOCKS_PER_SEC);
 
         copyArray(original,test,n);
         start=clock();
         mergeSort(test,0,n-1);
         end=clock();
-        printf("Merge %f\n",
-        (double)(end-start)/CLOCKS_PER_SEC);
-
+        printf("Merge %f\n",(double)(end-start)/CLOCKS_PER_SEC);
 
         copyArray(original,test,n);
         start=clock();
         heapSort(test,n);
         end=clock();
-        printf("Heap %f\n",
-        (double)(end-start)/CLOCKS_PER_SEC);
-
+        printf("Heap %f\n",(double)(end-start)/CLOCKS_PER_SEC);
 
         copyArray(original,test,n);
         start=clock();
         countSort(test,n);
         end=clock();
-        printf("Count %f\n",
-        (double)(end-start)/CLOCKS_PER_SEC);
-
+        printf("Count %f\n",(double)(end-start)/CLOCKS_PER_SEC);
     }
 
     return 0;
