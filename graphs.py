@@ -21,10 +21,10 @@ def plot_single(sizes, times, name):
     plt.show()
 
 # Plot individual graphs
-plot_single(sizes, quick, "QuickSort")
-plot_single(sizes, merge, "MergeSort")
-plot_single(sizes, heap, "HeapSort")
-plot_single(sizes, count, "CountingSort")
+plot_single(sizes, quick, "Quick Sort")
+plot_single(sizes, merge, "Merge Sort")
+plot_single(sizes, heap, "Heap Sort")
+plot_single(sizes, count, "Counting Sort")
 
 # Plot combined graph
 plt.figure(figsize=(10,6))
