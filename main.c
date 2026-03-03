@@ -5,7 +5,6 @@
 #define MAX 100000  // max array size
 
 // Merge Sort
-
 // merge two sorted parts
 void merge(int arr[], int left, int mid, int right){
 
@@ -58,8 +57,7 @@ void mergeSort(int arr[], int left, int right){
 
 
 // Counting Sort
-
-// find biggest number
+// find the biggest number
 int findMax(int arr[], int n){
 
     int max=arr[0];
@@ -181,7 +179,6 @@ void heapSort(int arr[], int n){
 
 // generate random numbers
 void generateArray(int arr[], int n){
-
     for(int i=0;i<n;i++)
         arr[i]=rand()%1000;
 }
