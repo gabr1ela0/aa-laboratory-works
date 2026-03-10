@@ -12,3 +12,15 @@ class Graph:
     def addEdge(self, u, v):
         self.graph[u].append(v)
         self.graph[v].append(u)
+
+    def DFSUtil(self, v, visited):
+        visited.add(v)
+
+        for neighbour in self.graph[v]:
+            if neighbour not in visited:
+                self.DFSUtil(neighbour, visited)
+
+    # DFS main method
+    def DFS(self, start):
+        visited = set()
+        self.DFSUtil(start, visited)
