@@ -20,7 +20,35 @@ class Graph:
             if neighbour not in visited:
                 self.DFSUtil(neighbour, visited)
 
-    # DFS main method
     def DFS(self, start):
         visited = set()
         self.DFSUtil(start, visited)
+
+    # BFS implementation
+    def BFS(self, start):
+        visited = set()
+        queue = deque()
+
+        visited.add(start)
+        queue.append(start)
+
+        while queue:
+            node = queue.popleft()
+
+            for neighbour in self.graph[node]:
+                if neighbour not in visited:
+                    visited.add(neighbour)
+                    queue.append(neighbour)
+
+    def generate_graph(n, edges_per_node=3):
+
+        g = Graph(n)
+
+        for i in range(n):
+            for _ in range(edges_per_node):
+                v = random.randint(0, n - 1)
+
+                if v != i:
+                    g.addEdge(i, v)
+
+        return g
