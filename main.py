@@ -79,3 +79,17 @@ class Graph:
         bfs_times.append(bfs_time)
 
         print(f"{n}\t{dfs_time:.8f}\t{bfs_time:.8f}")
+
+    plt.figure(figsize=(8, 5))
+
+    plt.plot(values, dfs_times, marker='o', label="DFS")
+    plt.plot(values, bfs_times, marker='o', label="BFS")
+
+    plt.xlabel("Number of Nodes")
+    plt.ylabel("Execution Time (seconds)")
+    plt.title("Empirical Analysis of DFS vs BFS")
+
+    plt.legend()
+    plt.grid()
+
+    plt.show()
