@@ -52,3 +52,30 @@ class Graph:
                     g.addEdge(i, v)
 
         return g
+
+    values = [10, 50, 100, 200, 300, 400, 500]
+
+    dfs_times = []
+    bfs_times = []
+
+    print("Nodes\tDFS Time\tBFS Time")
+
+    for n in values:
+        g = generate_graph(n)
+
+        # DFS timing
+        start = time.perf_counter()
+        g.DFS(0)
+        end = time.perf_counter()
+        dfs_time = end - start
+
+        # BFS timing
+        start = time.perf_counter()
+        g.BFS(0)
+        end = time.perf_counter()
+        bfs_time = end - start
+
+        dfs_times.append(dfs_time)
+        bfs_times.append(bfs_time)
+
+        print(f"{n}\t{dfs_time:.8f}\t{bfs_time:.8f}")
