@@ -25,3 +25,10 @@ def dijkstra(graph, start):
                 heapq.heappush(heap, (distances[v], v))
 
     return distances
+
+graph = [
+    [(1, 4), (2, 1)],  # edges from node 0
+    [(3, 1)],           # edges from node 1
+    [(1, 2), (3, 5)],   # edges from node 2
+    []                  # edges from node 3
+]
