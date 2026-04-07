@@ -26,6 +26,23 @@ def dijkstra(graph, start):
 
     return distances
 
+
+def floyd_warshall(graph):
+    """
+    graph: adjacency matrix where graph[i][j] = weight or float('inf') if no edge
+    returns: matrix of shortest distances between all pairs of nodes
+    """
+    n = len(graph)
+    dist = [row[:] for row in graph]  # copy the matrix
+
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if dist[i][k] + dist[k][j] < dist[i][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+
+    return dist
+
 graph = [
     [(1, 4), (2, 1)],  # edges from node 0
     [(3, 1)],           # edges from node 1
