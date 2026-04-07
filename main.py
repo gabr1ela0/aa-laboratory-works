@@ -78,24 +78,34 @@ def generate_dense_graph(n):
 
     return graph_list, graph_matrix
 
-graph_dijkstra = [
-    [(1, 4), (2, 1)],  # edges from node 0
-    [(3, 1)],           # edges from node 1
-    [(1, 2), (3, 5)],   # edges from node 2
-    []                  # edges from node 3
-]
+sizes = [10, 30, 50, 70, 100]
 
-inf = float('inf')
-graph_floyd_warshall = [
-    [0, 4, 1, inf],
-    [inf, 0, inf, 1],
-    [inf, 2, 0, 5],
-    [inf, inf, inf, 0]
-]
+dijkstra_sparse_times = []
+dijkstra_dense_times = []
+fw_sparse_times = []
+fw_dense_times = []
 
-print("Dijkstra shortest paths from node 0:", dijkstra(graph_dijkstra, 0))
+for n in sizes:
+    print(f"Testing n = {n}")
 
-distances_fw = floyd_warshall(graph_floyd_warshall)
-print("Floyd–Warshall all-pairs shortest paths:")
-for row in distances_fw:
-    print(row)
+    # Sparse graph
+    g_list, g_matrix = generate_sparse_graph(n)
+
+    start = time.time()
+    dijkstra(g_list, 0)
+    dijkstra_sparse_times.append(time.time() - start)
+
+    start = time.time()
+    floyd_warshall(g_matrix)
+    fw_sparse_times.append(time.time() - start)
+
+    # Dense graph
+    g_list, g_matrix = generate_dense_graph(n)
+
+    start = time.time()
+    dijkstra(g_list, 0)
+    dijkstra_dense_times.append(time.time() - start)
+
+    start = time.time()
+    floyd_warshall(g_matrix)
+    fw_dense_times.append(time.time() - start)
