@@ -32,3 +32,5 @@ graph = [
     [(1, 2), (3, 5)],   # edges from node 2
     []                  # edges from node 3
 ]
+
+print("Dijkstra shortest paths from node 0:", dijkstra(graph, 0))
