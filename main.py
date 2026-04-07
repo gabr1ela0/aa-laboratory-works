@@ -109,3 +109,19 @@ for n in sizes:
     start = time.time()
     floyd_warshall(g_matrix)
     fw_dense_times.append(time.time() - start)
+
+plt.figure()
+
+plt.plot(sizes, dijkstra_sparse_times, label="Dijkstra Sparse")
+plt.plot(sizes, dijkstra_dense_times, label="Dijkstra Dense")
+plt.plot(sizes, fw_sparse_times, label="Floyd-Warshall Sparse")
+plt.plot(sizes, fw_dense_times, label="Floyd-Warshall Dense")
+
+plt.xlabel("Number of nodes")
+plt.ylabel("Execution time (seconds)")
+plt.title("Algorithm performance comparison")
+
+plt.legend()
+plt.grid()
+
+plt.show()
