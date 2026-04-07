@@ -43,11 +43,24 @@ def floyd_warshall(graph):
 
     return dist
 
-graph = [
+graph_dijkstra = [
     [(1, 4), (2, 1)],  # edges from node 0
     [(3, 1)],           # edges from node 1
     [(1, 2), (3, 5)],   # edges from node 2
     []                  # edges from node 3
 ]
 
-print("Dijkstra shortest paths from node 0:", dijkstra(graph, 0))
+inf = float('inf')
+graph_floyd_warshall = [
+    [0, 4, 1, inf],
+    [inf, 0, inf, 1],
+    [inf, 2, 0, 5],
+    [inf, inf, inf, 0]
+]
+
+print("Dijkstra shortest paths from node 0:", dijkstra(graph_dijkstra, 0))
+
+distances_fw = floyd_warshall(graph_floyd_warshall)
+print("Floyd–Warshall all-pairs shortest paths:")
+for row in distances_fw:
+    print(row)
