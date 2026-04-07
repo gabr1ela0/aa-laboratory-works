@@ -43,6 +43,41 @@ def floyd_warshall(graph):
 
     return dist
 
+def generate_sparse_graph(n):
+    """Few edges (~n edges)"""
+    graph_list = [[] for _ in range(n)]
+    graph_matrix = [[float('inf')] * n for _ in range(n)]
+
+    for i in range(n):
+        graph_matrix[i][i] = 0
+
+    for _ in range(n):  # ~n edges
+        u = random.randint(0, n - 1)
+        v = random.randint(0, n - 1)
+        if u != v:
+            w = random.randint(1, 10)
+            graph_list[u].append((v, w))
+            graph_matrix[u][v] = w
+
+    return graph_list, graph_matrix
+
+def generate_dense_graph(n):
+    """Many edges (~n^2 edges)"""
+    graph_list = [[] for _ in range(n)]
+    graph_matrix = [[float('inf')] * n for _ in range(n)]
+
+    for i in range(n):
+        graph_matrix[i][i] = 0
+
+    for i in range(n):
+        for j in range(n):
+            if i != j:
+                w = random.randint(1, 10)
+                graph_list[i].append((j, w))
+                graph_matrix[i][j] = w
+
+    return graph_list, graph_matrix
+
 graph_dijkstra = [
     [(1, 4), (2, 1)],  # edges from node 0
     [(3, 1)],           # edges from node 1
