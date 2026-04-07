@@ -67,7 +67,7 @@ def generate_sparse_graph(n):
         graph_matrix[u][v] = w
 
     # Add a few extra random edges to reach ~n total edges
-    extra = n - (n - 1)  # just 1 extra here; increase multiplier if desired
+    extra = int(n * 0.3)
     added = 0
     attempts = 0
     while added < extra and attempts < n * 10:
@@ -113,14 +113,14 @@ def measure_time(func, *args, runs=5):
 
 
 # Larger sizes make the O(n^3) curve of Floyd-Warshall clearly visible
-sizes = [10, 30, 50, 70, 100, 200, 300, 500]
+sizes = [10, 30, 50, 70, 100, 200, 300]
 
 dijkstra_sparse_times = []
 dijkstra_dense_times = []
 fw_sparse_times = []
 fw_dense_times = []
 
-print(f"{'n':>6} | {'Dijk Sparse':>12} | {'Dijk Dense':>12} | {'FW Sparse':>12} | {'FW Dense':>12}")
+print(f"{'n':>6} | {'D Sparse':>12} | {'D Dense':>12} | {'FW Sparse':>12} | {'FW Dense':>12}")
 print("-" * 65)
 
 for n in sizes:
@@ -161,6 +161,6 @@ ax2.set_ylabel("Execution time (seconds)")
 ax2.legend()
 ax2.grid(True)
 
-plt.suptitle("Dijkstra vs Floyd-Warshall: Performance Comparison", fontsize=14)
+plt.suptitle("Dijkstra vs Floyd-Warshall", fontsize=14)
 plt.tight_layout()
 plt.show()
