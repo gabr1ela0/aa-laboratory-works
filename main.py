@@ -80,7 +80,7 @@ for n in values:
     print(f"{n}\t\t{dfs_time:.8f}\t{bfs_time:.8f}")
 
 
-# 1️⃣ DFS Execution Time Graph
+# DFS Execution Time Graph
 plt.figure()
 plt.plot(values, dfs_times, marker='o')
 plt.xlabel("Number of Nodes")
@@ -90,7 +90,7 @@ plt.grid()
 plt.show()
 
 
-# 2️⃣ BFS Execution Time Graph
+# BFS Execution Time Graph
 plt.figure()
 plt.plot(values, bfs_times, marker='o')
 plt.xlabel("Number of Nodes")
@@ -100,7 +100,7 @@ plt.grid()
 plt.show()
 
 
-# 3️⃣ DFS vs BFS Comparison Graph
+# DFS vs BFS Comparison Graph
 plt.figure()
 plt.plot(values, dfs_times, marker='o', label="DFS")
 plt.plot(values, bfs_times, marker='o', label="BFS")
