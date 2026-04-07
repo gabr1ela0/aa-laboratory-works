@@ -14,7 +14,7 @@ def dijkstra(graph, start):
     distances = [float('inf')] * n
     distances[start] = 0
     visited = [False] * n
-    heap = [(0, start)]  # (distance, node)
+    heap = [(0, start)]
 
     while heap:
         current_distance, u = heapq.heappop(heap)
@@ -36,7 +36,7 @@ def floyd_warshall(graph):
     returns: matrix of shortest distances between all pairs of nodes
     """
     n = len(graph)
-    dist = [row[:] for row in graph]  # copy the matrix
+    dist = [row[:] for row in graph]
 
     for k in range(n):
         for i in range(n):
@@ -46,29 +46,49 @@ def floyd_warshall(graph):
 
     return dist
 
+
 def generate_sparse_graph(n):
-    """Few edges (~n edges)"""
+    """
+    Sparse graph: guaranteed connected backbone (n-1 edges as a chain),
+    then a few extra random edges — total ~n edges.
+    """
     graph_list = [[] for _ in range(n)]
     graph_matrix = [[float('inf')] * n for _ in range(n)]
-
     for i in range(n):
         graph_matrix[i][i] = 0
 
-    for _ in range(n):  # ~n edges
+    # Guarantee connectivity via a simple chain: 0->1->2->...->n-1
+    nodes = list(range(n))
+    random.shuffle(nodes)
+    for i in range(n - 1):
+        u, v = nodes[i], nodes[i + 1]
+        w = random.randint(1, 10)
+        graph_list[u].append((v, w))
+        graph_matrix[u][v] = w
+
+    # Add a few extra random edges to reach ~n total edges
+    extra = n - (n - 1)  # just 1 extra here; increase multiplier if desired
+    added = 0
+    attempts = 0
+    while added < extra and attempts < n * 10:
         u = random.randint(0, n - 1)
         v = random.randint(0, n - 1)
-        if u != v:
+        if u != v and graph_matrix[u][v] == float('inf'):
             w = random.randint(1, 10)
             graph_list[u].append((v, w))
             graph_matrix[u][v] = w
+            added += 1
+        attempts += 1
 
     return graph_list, graph_matrix
 
+
 def generate_dense_graph(n):
-    """Many edges (~n^2 edges)"""
+    """
+    Dense graph: all possible directed edges (~n^2 edges).
+    """
     graph_list = [[] for _ in range(n)]
     graph_matrix = [[float('inf')] * n for _ in range(n)]
-
     for i in range(n):
         graph_matrix[i][i] = 0
 
@@ -81,50 +101,66 @@ def generate_dense_graph(n):
 
     return graph_list, graph_matrix
 
-sizes = [10, 30, 50, 70, 100]
+
+def measure_time(func, *args, runs=5):
+    """Average execution time over multiple runs for accuracy."""
+    total = 0
+    for _ in range(runs):
+        start = time.perf_counter()
+        func(*args)
+        total += time.perf_counter() - start
+    return total / runs
+
+
+# Larger sizes make the O(n^3) curve of Floyd-Warshall clearly visible
+sizes = [10, 30, 50, 70, 100, 200, 300, 500]
 
 dijkstra_sparse_times = []
 dijkstra_dense_times = []
 fw_sparse_times = []
 fw_dense_times = []
 
+print(f"{'n':>6} | {'Dijk Sparse':>12} | {'Dijk Dense':>12} | {'FW Sparse':>12} | {'FW Dense':>12}")
+print("-" * 65)
+
 for n in sizes:
-    print(f"Testing n = {n}")
+    g_list_s, g_matrix_s = generate_sparse_graph(n)
+    g_list_d, g_matrix_d = generate_dense_graph(n)
 
-    # Sparse graph
-    g_list, g_matrix = generate_sparse_graph(n)
+    # Fewer averaging runs for large n to keep total runtime reasonable
+    runs = max(1, 5 - sizes.index(n) // 3)
 
-    start = time.time()
-    dijkstra(g_list, 0)
-    dijkstra_sparse_times.append(time.time() - start)
+    ds = measure_time(dijkstra, g_list_s, 0, runs=runs)
+    dd = measure_time(dijkstra, g_list_d, 0, runs=runs)
+    fs = measure_time(floyd_warshall, g_matrix_s, runs=runs)
+    fd = measure_time(floyd_warshall, g_matrix_d, runs=runs)
 
-    start = time.time()
-    floyd_warshall(g_matrix)
-    fw_sparse_times.append(time.time() - start)
+    dijkstra_sparse_times.append(ds)
+    dijkstra_dense_times.append(dd)
+    fw_sparse_times.append(fs)
+    fw_dense_times.append(fd)
 
-    # Dense graph
-    g_list, g_matrix = generate_dense_graph(n)
+    print(f"{n:>6} | {ds:>12.6f} | {dd:>12.6f} | {fs:>12.6f} | {fd:>12.6f}")
 
-    start = time.time()
-    dijkstra(g_list, 0)
-    dijkstra_dense_times.append(time.time() - start)
+# Two subplots: sparse comparison and dense comparison
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
 
-    start = time.time()
-    floyd_warshall(g_matrix)
-    fw_dense_times.append(time.time() - start)
+ax1.plot(sizes, dijkstra_sparse_times, marker='o', label="Dijkstra")
+ax1.plot(sizes, fw_sparse_times, marker='s', label="Floyd-Warshall")
+ax1.set_title("Sparse Graph")
+ax1.set_xlabel("Number of nodes")
+ax1.set_ylabel("Execution time (seconds)")
+ax1.legend()
+ax1.grid(True)
 
-plt.figure()
+ax2.plot(sizes, dijkstra_dense_times, marker='o', label="Dijkstra")
+ax2.plot(sizes, fw_dense_times, marker='s', label="Floyd-Warshall")
+ax2.set_title("Dense Graph")
+ax2.set_xlabel("Number of nodes")
+ax2.set_ylabel("Execution time (seconds)")
+ax2.legend()
+ax2.grid(True)
 
-plt.plot(sizes, dijkstra_sparse_times, label="Dijkstra Sparse")
-plt.plot(sizes, dijkstra_dense_times, label="Dijkstra Dense")
-plt.plot(sizes, fw_sparse_times, label="Floyd-Warshall Sparse")
-plt.plot(sizes, fw_dense_times, label="Floyd-Warshall Dense")
-
-plt.xlabel("Number of nodes")
-plt.ylabel("Execution time (seconds)")
-plt.title("Algorithm performance comparison")
-
-plt.legend()
-plt.grid()
-
+plt.suptitle("Dijkstra vs Floyd-Warshall: Performance Comparison", fontsize=14)
+plt.tight_layout()
 plt.show()
