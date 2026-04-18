@@ -1,3 +1,4 @@
+import heapq
 
 # Union-Find for Kruskal
 class UnionFind:
@@ -36,6 +37,25 @@ def kruskal(n, edges):
                 break
     return mst_weight, mst_edges
 
+
+# Prim's Algorithm
+def prim(n, adj):
+    visited = [False] * n
+    min_heap = [(0, 0, -1)]
+    mst_weight = 0
+    mst_edges = []
+    while min_heap:
+        weight, u, parent = heapq.heappop(min_heap)
+        if visited[u]:
+            continue
+        visited[u] = True
+        mst_weight += weight
+        if parent != -1:
+            mst_edges.append((parent, u, weight))
+        for edge_weight, v in adj[u]:
+            if not visited[v]:
+                heapq.heappush(min_heap, (edge_weight, v, u))
+    return mst_weight, mst_edges
 
 
 
