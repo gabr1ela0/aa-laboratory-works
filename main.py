@@ -148,3 +148,55 @@ def empirical_analysis():
     return node_counts, kruskal_times, prim_times
 
 
+
+def plot_results(node_counts, kruskal_times, prim_times):
+    # Plot Prim
+    plt.figure(figsize=(7, 5))
+    plt.plot(node_counts, prim_times, "s-", color="#2980b9", linewidth=2, markersize=6)
+    plt.title("Prim's Algorithm - Execution Time vs Number of Nodes")
+    plt.xlabel("Number of Nodes")
+    plt.ylabel("Execution Time (ms)")
+    plt.grid(True, linestyle="--", alpha=0.5)
+    plt.tight_layout()
+    plt.show()
+
+    # Plot Kruskal
+    plt.figure(figsize=(7, 5))
+    plt.plot(node_counts, kruskal_times, "o-", color="#e74c3c", linewidth=2, markersize=6)
+    plt.title("Kruskal's Algorithm - Execution Time vs Number of Nodes")
+    plt.xlabel("Number of Nodes")
+    plt.ylabel("Execution Time (ms)")
+    plt.grid(True, linestyle="--", alpha=0.5)
+    plt.tight_layout()
+    plt.show()
+
+    # Plot Prim and Kruskal
+    plt.figure(figsize=(7, 5))
+    plt.plot(node_counts, prim_times, "s-", color="#2980b9", linewidth=2, markersize=6, label="Prim")
+    plt.plot(node_counts, kruskal_times, "o-", color="#e74c3c", linewidth=2, markersize=6, label="Kruskal")
+    plt.title("Prim vs Kruskal - Execution Time vs Number of Nodes")
+    plt.xlabel("Number of Nodes")
+    plt.ylabel("Execution Time (ms)")
+    plt.legend()
+    plt.grid(True, linestyle="--", alpha=0.5)
+    plt.tight_layout()
+    plt.show()
+
+    # Plot Speedup ratio (shows clearly which is faster and by how much)
+    speedup = [k / p if p > 0 else 1.0 for k, p in zip(kruskal_times, prim_times)]
+    plt.figure(figsize=(7, 5))
+    plt.plot(node_counts, speedup, "^-", color="#8e44ad", linewidth=2, markersize=6)
+    plt.axhline(y=1.0, color="gray", linestyle="--", linewidth=1, label="Equal speed")
+    plt.title("Speedup Ratio: Kruskal Time / Prim Time")
+    plt.xlabel("Number of Nodes")
+    plt.ylabel("Ratio (above 1 = Kruskal is slower)")
+    plt.legend()
+    plt.grid(True, linestyle="--", alpha=0.5)
+    plt.tight_layout()
+    plt.show()
+
+
+if __name__ == "__main__":
+    demo_small_graph()
+    node_counts, kruskal_times, prim_times = empirical_analysis()
+    plot_results(node_counts, kruskal_times, prim_times)
