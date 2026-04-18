@@ -1,5 +1,4 @@
 
-
 # Union-Find for Kruskal
 class UnionFind:
     def __init__(self, n):
@@ -21,4 +20,24 @@ class UnionFind:
         if self.rank[rx] == self.rank[ry]:
             self.rank[rx] += 1
         return True
+
+
+# Kruskal's Algorithm
+def kruskal(n, edges):
+    edges = sorted(edges)
+    uf = UnionFind(n)
+    mst_weight = 0
+    mst_edges = []
+    for weight, u, v in edges:
+        if uf.union(u, v):
+            mst_weight += weight
+            mst_edges.append((u, v, weight))
+            if len(mst_edges) == n - 1:
+                break
+    return mst_weight, mst_edges
+
+
+
+
+
 
