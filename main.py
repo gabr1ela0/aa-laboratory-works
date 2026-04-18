@@ -114,6 +114,37 @@ def demo_small_graph():
     print()
 
 
+# Measure how execution time changes as the number of nodes increases
+def empirical_analysis():
+    node_counts = [10, 50, 100, 200, 500, 1000, 2000, 3000, 5000]
+    kruskal_times = []
+    prim_times = []
+    repeats = 3
 
+    print(f"{'Nodes':>8}  {'Kruskal (ms)':>14}  {'Prim (ms)':>12}")
+
+    for n in node_counts:
+        kt_total = 0.0
+        pt_total = 0.0
+
+        for _ in range(repeats):
+            edges, adj = generate_graph(n)
+
+            t0 = time.perf_counter()
+            kruskal(n, edges)
+            kt_total += time.perf_counter() - t0
+
+            t0 = time.perf_counter()
+            prim(n, adj)
+            pt_total += time.perf_counter() - t0
+
+        kt_ms = (kt_total / repeats) * 1000
+        pt_ms = (pt_total / repeats) * 1000
+        kruskal_times.append(kt_ms)
+        prim_times.append(pt_ms)
+
+        print(f"{n:>8}  {kt_ms:>14.3f}  {pt_ms:>12.3f}")
+
+    return node_counts, kruskal_times, prim_times
 
 
