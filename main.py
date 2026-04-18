@@ -1,5 +1,7 @@
 import heapq
+import time
 import random
+import matplotlib.pyplot as plt
 from collections import defaultdict
 
 
@@ -87,5 +89,31 @@ def generate_graph(n, max_weight=100):
             adj[v].append((w, u))
 
     return edges, adj
+
+
+def demo_small_graph():
+    print("DEMO on a small graph with 7 nodes")
+    raw_edges = [
+        (2, 0, 1), (3, 0, 3), (3, 1, 2), (4, 1, 3),
+        (5, 1, 4), (6, 2, 4), (7, 3, 4), (4, 3, 5),
+        (6, 4, 5), (5, 4, 6), (8, 5, 6)
+    ]
+    n = 7
+    adj = defaultdict(list)
+    for w, u, v in raw_edges:
+        adj[u].append((w, v))
+        adj[v].append((w, u))
+
+    k_weight, k_edges = kruskal(n, raw_edges)
+    print(f"Kruskal MST weight: {k_weight}")
+    print("Kruskal edges:", [(u, v, w) for u, v, w in k_edges])
+
+    p_weight, p_edges = prim(n, adj)
+    print(f"Prim MST weight: {p_weight}")
+    print("Prim edges:", [(u, v, w) for u, v, w in p_edges])
+    print()
+
+
+
 
 
