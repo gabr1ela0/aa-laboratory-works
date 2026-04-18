@@ -1,4 +1,7 @@
 import heapq
+import random
+from collections import defaultdict
+
 
 # Union-Find for Kruskal
 class UnionFind:
@@ -58,6 +61,31 @@ def prim(n, adj):
     return mst_weight, mst_edges
 
 
+# Generates a random connected graph with roughly 2*n edges
+def generate_graph(n, max_weight=100):
+    edges = []
+    adj = defaultdict(list)
+    nodes = list(range(n))
+    random.shuffle(nodes)
 
+    # Guarantee connectivity with a spanning chain
+    for i in range(1, n):
+        u, v = nodes[i - 1], nodes[i]
+        w = random.randint(1, max_weight)
+        edges.append((w, u, v))
+        adj[u].append((w, v))
+        adj[v].append((w, u))
+
+    # Add roughly n extra random edges
+    for _ in range(n):
+        u = random.randint(0, n - 1)
+        v = random.randint(0, n - 1)
+        if u != v:
+            w = random.randint(1, max_weight)
+            edges.append((w, u, v))
+            adj[u].append((w, v))
+            adj[v].append((w, u))
+
+    return edges, adj
 
 
