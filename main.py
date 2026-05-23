@@ -182,7 +182,7 @@ def plot_results(node_counts, kruskal_times, prim_times):
     plt.tight_layout()
     plt.show()
 
-    # Plot Speedup ratio (shows clearly which is faster and by how much)
+    # Plot Speedup ratio
     speedup = [k / p if p > 0 else 1.0 for k, p in zip(kruskal_times, prim_times)]
     plt.figure(figsize=(7, 5))
     plt.plot(node_counts, speedup, "^-", color="#8e44ad", linewidth=2, markersize=6)
